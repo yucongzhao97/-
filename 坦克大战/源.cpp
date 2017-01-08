@@ -198,7 +198,7 @@ private:
 
 	void left(int x, int y) {
 		distance = 0;
-		while (getItem(getLevel(), bullet_y, bullet_x - distance / 60) == 0) {
+		while (getItem(getLevel(), bullet_y, bullet_x - distance / 60) == 0 && Bx - distance >= 0) {
 			distance += 60;
 		}
 		if (Bx < 0)
@@ -230,7 +230,7 @@ private:
 	}
 	void right(int x, int y) {
 		distance = 0;
-		while (getItem(getLevel(), bullet_y, bullet_x + distance / 60) == 0) {
+		while (getItem(getLevel(), bullet_y, bullet_x + distance / 60) == 0 && Bx + distance <Map_width) {
 			distance += 60;
 		}
 
@@ -247,13 +247,17 @@ private:
 		}
 		else
 		{
-			for (int i = 0; i < distance&&Bx<Map_width - 60; i += 2) {
+			for (int i = 0; i < distance&&Bx<Map_width; i += 2) {
 				Bx += 2; putimage(Bx, By, &Bullet[1]);
 				putimage(x, y, &tank[1]);
 				InitMap();
 				Sleep(2);
 			}
-			changeItem(getLevel(), bullet_y, bullet_x + distance / 60);
+			if(bullet_x+distance/60<=9)
+			{
+				changeItem(getLevel(), bullet_y, bullet_x + distance / 60);
+			}
+			
 			BeginBatchDraw();
 			putimage(0, 0, &Gamebackground);
 			putimage(x, y, &tank[1]);
@@ -327,7 +331,6 @@ private:
 	}
 };
 
-
 class Ctank :public Cbullet {
 public:
 	void controller(char c)
@@ -354,10 +357,9 @@ private:
 	int bullet = 10;//坦克开局有10个子弹
 	int x = 0; //坦克在左上角贴图在X轴位置
 	int y = 0; //坦克在左上角贴图在Y轴位置
-	int tank_x;
-	int tank_y;
+	int tank_x;//坦克在矩阵中X位置
+	int tank_y;//坦克在矩阵中Y位置
 	int face;   //坦克朝向
-
 
 	void Left() //左走
 	{
@@ -437,10 +439,6 @@ private:
 				InitMap();
 			}
 		}
-	}
-	void Fire()
-	{
-
 	}
 };
 

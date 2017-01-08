@@ -196,6 +196,7 @@ private:
 	int bullet_x;//子弹在矩阵中X坐标
 	int bullet_y;//子弹在矩阵中Y坐标
 
+				 //子弹向左飞行
 	void left(int x, int y) {
 		distance = 0;
 		while (getItem(getLevel(), bullet_y, bullet_x - distance / 60) == 0 && Bx - distance >= 0) {
@@ -228,6 +229,7 @@ private:
 			EndBatchDraw();
 		}
 	}
+	//子弹向右飞行
 	void right(int x, int y) {
 		distance = 0;
 		while (getItem(getLevel(), bullet_y, bullet_x + distance / 60) == 0 && Bx + distance <Map_width) {
@@ -253,11 +255,11 @@ private:
 				InitMap();
 				Sleep(2);
 			}
-			if(bullet_x+distance/60<=9)
+			if (bullet_x + distance / 60 <= 9)
 			{
 				changeItem(getLevel(), bullet_y, bullet_x + distance / 60);
 			}
-			
+
 			BeginBatchDraw();
 			putimage(0, 0, &Gamebackground);
 			putimage(x, y, &tank[1]);
@@ -265,9 +267,10 @@ private:
 			EndBatchDraw();
 		}
 	}
+	//子弹向上飞行
 	void up(int x, int y) {
 		distance = 0;
-		while (getItem(getLevel(), bullet_y - distance / 60, bullet_x) == 0) {
+		while (getItem(getLevel(), bullet_y - distance / 60, bullet_x) == 0 && By - distance >= 0) {
 			distance += 60;
 		}
 		if (By < 0)
@@ -297,9 +300,10 @@ private:
 			EndBatchDraw();
 		}
 	}
+	//子弹向下飞行
 	void down(int x, int y) {
 		distance = 0;
-		while (getItem(getLevel(), bullet_y + distance / 60, bullet_x) == 0) {
+		while (getItem(getLevel(), bullet_y + distance / 60, bullet_x) == 0 && By + distance<Map_height) {
 			distance += 60;
 		}
 		if (By >= 600)
@@ -329,6 +333,7 @@ private:
 			EndBatchDraw();
 		}
 	}
+
 };
 
 class Ctank :public Cbullet {
@@ -442,7 +447,7 @@ private:
 	}
 };
 
-class Cgame {
+class Cgame{
 public:
 	void start()
 	{
@@ -479,7 +484,6 @@ public:
 private:
 	int width = 800; //主界面宽800
 	int height = 600; //主界面高600
-
 };
 
 class UI :public Cimage, public Csound {
@@ -521,6 +525,8 @@ public:
 			else if (msg.x >= 70 && msg.x <= 280 && msg.y >= 290 && msg.y <= 290 + bHeight && msg.uMsg == WM_LBUTTONUP)
 			{
 				putimage(70, 290, &hbuttonImage[1]);
+				howtoplay();
+				break;
 			}
 			//结束游戏
 			if (msg.x >= 70 && msg.x <= 280 && msg.y >= 410 && msg.y <= 410 + bHeight && msg.uMsg == WM_LBUTTONDOWN)
@@ -540,6 +546,27 @@ private:
 	int height = 600; //主界面高600
 	int bWidth = 210; //按钮宽210
 	int bHeight = 55;//按钮高55
+	void howtoplay()
+	{
+		clearcliprgn();
+		putimage(600, 500, &lbuttonImage[0]);
+		MOUSEMSG msg;
+		while (1)
+		{
+			msg = GetMouseMsg();
+			//开始游戏
+			if (msg.x >= 600 && msg.x <= 700 && msg.y >= 500 && msg.y <= 500 + bHeight && msg.uMsg == WM_LBUTTONDOWN)
+			{
+				putimage(600, 500, &lbuttonImage[0]);
+			}
+			else if (msg.x >= 600 && msg.x <= 700 && msg.y >= 500 && msg.y <= 500 + bHeight && msg.uMsg == WM_LBUTTONUP)
+			{
+				putimage(600, 500, &hbuttonImage[0]);
+				mainscene();
+				break;
+			}
+		}
+	}
 };
 
 int main()

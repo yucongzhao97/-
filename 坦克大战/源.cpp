@@ -10,10 +10,11 @@ using namespace std;
 #define Map_width 600//游戏地图宽600
 #define Map_height 600//游戏地图高600
 #define MAP_ITEM int
-#define FACE_LEFT 1         //坦克方向朝左
-#define FACE_RIGHT 2		//坦克方向朝右
-#define FACE_UP 3			//坦克方向朝上
-#define FACE_DOWN 4			//坦克方向朝下
+#define FACE_LEFT 3         //坦克方向朝左
+#define FACE_RIGHT 1		//坦克方向朝右
+#define FACE_UP 0			//坦克方向朝上
+#define FACE_DOWN 2			//坦克方向朝下
+int num = 10;     //子弹数量10
 
 class Cimage
 {
@@ -99,7 +100,7 @@ public:
 					case 2:putimage(j * 60, i * 60, &block[1]); break;
 					case 3:putimage(j * 60, i * 60, &block[2]); break;
 					case 4:putimage(j * 60, i * 60, &block[3]); break;
-					case 5:putimage(j * 60, i * 60, &end); break;
+					case -1:putimage(j * 60, i * 60, &end); break;
 					default:
 						break;
 					}
@@ -116,14 +117,14 @@ public:
 					case 2:putimage(j * 60, i * 60, &block[1]); break;
 					case 3:putimage(j * 60, i * 60, &block[2]); break;
 					case 4:putimage(j * 60, i * 60, &block[3]); break;
-					case 5:putimage(j * 60, i * 60, &end); break;
+					case -1:putimage(j * 60, i * 60, &end); break;
 					default:
 						break;
 					}
 				}
 			}
 		}
-		putimage(600, 0, &backGround);
+		putimage(600, 0, &bullet[num]);
 	}
 	MAP_ITEM getItem(int level, int x, int y) {
 		if (level == 1)
@@ -162,6 +163,10 @@ public:
 	int getLevel() {
 		return level;
 	}
+	void changeLevel() {
+		int &l = level;
+		l = 2;
+	}
 private:
 	int map1[10][10] = {
 		0,0,1,0,3,0,3,0,3,0,
@@ -173,19 +178,19 @@ private:
 		3,0,1,0,4,0,3,0,1,0,
 		0,1,0,1,0,1,0,3,0,1,
 		3,0,1,0,4,0,1,0,3,0,
-		0,1,0,1,0,1,0,1,0,5
+		0,1,0,1,0,1,0,1,0,-1
 	};
 	int map2[10][10] = {
-		0,0,0,1,1,1,1,1,1,1,
-		0,3,3,0,0,0,0,0,0,1,
-		0,1,0,3,3,1,0,3,0,1,
-		0,2,0,3,0,3,0,2,0,1,
-		1,1,3,1,0,1,1,1,1,1,
-		3,1,0,0,0,0,0,0,0,1,
-		1,1,1,1,3,2,2,2,0,1,
-		0,0,1,0,0,0,0,0,0,1,
-		0,3,3,3,3,3,2,2,3,2,
-		0,0,0,0,0,0,0,0,0,5
+		0,0,3,3,3,3,3,3,3,3,
+		0,1,1,0,1,1,0,1,1,3,
+		3,1,1,0,1,1,0,1,1,3,
+		3,0,0,4,0,0,4,0,0,3,
+		3,1,1,0,4,4,0,1,1,3,
+		3,1,1,0,4,4,0,1,1,3,
+		3,0,0,4,0,0,4,0,0,3,
+		3,1,1,0,1,1,0,1,1,3,
+		3,1,1,0,1,1,0,1,1,0,
+		3,3,3,3,3,3,3,3,0,-1
 	};
 
 	int width = 600; //地图宽600
@@ -196,6 +201,7 @@ private:
 
 class Cbullet :public Cmap {
 public:
+	//绘制子弹
 	void drawBullet(int face, int x, int y) {
 		switch (face)
 		{
@@ -207,18 +213,20 @@ public:
 			break;
 		}
 	}
-	int getBullet()
+	//获取子弹数
+	int getnum()
 	{
 		return num;
 	}
+
 private:
-	int num = 10;     //子弹数量10
+
 	int distance;  //子弹需要行走的距离
 	int Bx, By;    //子弹左上角坐标
 	int bullet_x;//子弹在矩阵中X坐标
 	int bullet_y;//子弹在矩阵中Y坐标
 
-	 //子弹向左飞行
+	//子弹向左飞行
 	void left(int x, int y) {
 		distance = 0;
 		while (getItem(getLevel(), bullet_y, bullet_x - distance / 60) == 0 && Bx - distance >= 0) {
@@ -237,6 +245,7 @@ private:
 		}
 		else
 		{
+			num--;
 			for (int i = 0; i < distance; i += 2) {
 				Bx -= 2; putimage(Bx, By, &Bullet[0]);
 				putimage(x, y, &tank[3]);
@@ -271,6 +280,7 @@ private:
 		}
 		else
 		{
+			num--;
 			for (int i = 0; i < distance&&Bx<Map_width; i += 2) {
 				Bx += 2; putimage(Bx, By, &Bullet[1]);
 				putimage(x, y, &tank[1]);
@@ -308,6 +318,7 @@ private:
 		}
 		else
 		{
+			num--;
 			for (int i = 0; i < distance; i += 2) {
 				By -= 2; putimage(Bx, By, &Bullet[2]);
 				putimage(x, y, &tank[0]);
@@ -341,6 +352,7 @@ private:
 		}
 		else
 		{
+			num--;
 			for (int i = 0; i < distance; i += 2) {
 				By += 2; putimage(Bx, By, &Bullet[3]);
 				putimage(x, y, &tank[2]);
@@ -358,14 +370,13 @@ private:
 
 };
 
-
 class Ctank :public Cbullet {
 public:
 	void controller(char c)
 	{
 		tank_x = x / 60;
 		tank_y = y / 60;
-
+		
 		putimage(0, 0, &Gamebackground);
 		switch (c)
 		{
@@ -373,10 +384,37 @@ public:
 		case 'd':face = FACE_RIGHT; Right(); break;
 		case 'w':face = FACE_UP; Up(); break;
 		case 's':face = FACE_DOWN; Down(); break;
-		case ' ':drawBullet(face, x, y); break;
+		case ' ':fire(); break;
 		default:break;
 		}
+		tank_x = x / 60;
+		tank_y = y / 60;
+		if (getItem(getLevel(), getTank_x(), getTank_y()) == -1) {
+			setx(0);
+			sety(0);
+			num = 10;
+			changeLevel();	
+			clearcliprgn();
+			putimage(0, 0, &tank[2]);
+		}
 		InitMap();
+ 		
+	}
+	int getTank_x()
+	{
+		return tank_x;
+	}
+	int getTank_y()
+	{
+		return tank_y;
+	}
+	void setx(int sx)
+	{
+		x = sx;
+	}
+	void sety(int sy)
+	{
+		y = sy;
 	}
 private:
 	int length = 60;//坦克长宽都为60
@@ -385,10 +423,17 @@ private:
 	int bullet = 10;//坦克开局有10个子弹
 	int x = 0; //坦克在左上角贴图在X轴位置
 	int y = 0; //坦克在左上角贴图在Y轴位置
-	int tank_x;//坦克在矩阵中X位置
-	int tank_y;//坦克在矩阵中Y位置
-	int face;   //坦克朝向
+	int tank_x = x / 60;//坦克在矩阵中X位置
+	int tank_y = y / 60;//坦克在矩阵中Y位置
+	int face = 1;   //坦克朝向
 
+	//开火
+	void fire() {
+		if (num > 0)
+			drawBullet(face, x, y);
+		else
+			putimage(x, y, &tank[face]);
+	}
 	void Left() //左走
 	{
 		if (x <= 0)
@@ -470,18 +515,18 @@ private:
 	}
 };
 
-class Cgame{
+class Cgame:public Cmap {
 public:
 	void start()
 	{
 		initgraph(width, height);
 		//mciSendString("play 音乐\\游戏音乐.mp3", NULL, 0, NULL);
-		Cmap level1;
+		Cmap level;
 		Cimage img;
-		level1.InitMap();
-		Ctank tank;
+		level.InitMap();
 		char c;
-		putimage(0, 0, &img.tank[0]);
+		putimage(0, 0, &img.tank[2]);
+		Ctank tank;
 		while (1)
 		{
 			c = getch();//获取按键
@@ -496,6 +541,7 @@ public:
 							if (c != ' ')
 							{
 								continue;
+
 							}
 						}
 					}
@@ -509,7 +555,7 @@ private:
 	int height = 600; //主界面高600
 };
 
-class UI :public Csound,public Cbullet{
+class UI :public Csound, public Cbullet {
 public:
 	UI()
 	{
@@ -519,6 +565,7 @@ public:
 	void mainscene()
 	{
 		putimage(0, 0, &backImage);
+
 		//mciSendString("play 音乐\\主界面.mp3", NULL, 0, NULL);
 		putimage(70, 170, &hbuttonImage[0]);
 		putimage(70, 290, &hbuttonImage[1]);
@@ -563,10 +610,6 @@ public:
 				closegraph();
 			}
 		}
-	}
-	void gamescene()
-	{
-
 	}
 private:
 	int width = 800; //主界面宽800

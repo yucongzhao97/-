@@ -327,6 +327,15 @@ private:
 	}
 };
 
+
+
+//’‚ «≤‚ ‘
+
+
+
+
+
+
 class Ctank :public Cbullet {
 public:
 	void controller(char c)

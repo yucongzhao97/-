@@ -29,6 +29,7 @@ public:
 		Bullet[4],//子弹4个方向
 		Gamebackground,//游戏内背景图
 		howto,//游戏说明
+		bullet[11],//11个子弹图
 		back[2], replay[2];//返回，重新开始
 private:
 	void load() {
@@ -59,7 +60,17 @@ private:
 		loadimage(&Bullet[0], "图片\\bullet_left.jpg");
 		loadimage(&Gamebackground, "图片\\gamebackground.jpg");
 		loadimage(&howto, "图片\\游戏说明页1.jpg");
-
+		loadimage(&bullet[0], "图片\\子弹0.jpg");
+		loadimage(&bullet[1], "图片\\子弹1.jpg");
+		loadimage(&bullet[2], "图片\\子弹2.jpg");
+		loadimage(&bullet[3], "图片\\子弹3.jpg");
+		loadimage(&bullet[4], "图片\\子弹4.jpg");
+		loadimage(&bullet[5], "图片\\子弹5.jpg");
+		loadimage(&bullet[6], "图片\\子弹6.jpg");
+		loadimage(&bullet[7], "图片\\子弹7.jpg");
+		loadimage(&bullet[8], "图片\\子弹8.jpg");
+		loadimage(&bullet[9], "图片\\子弹9.jpg");
+		loadimage(&bullet[10], "图片\\子弹10.jpg");
 	}
 };
 
@@ -498,7 +509,7 @@ private:
 	int height = 600; //主界面高600
 };
 
-class UI :public Cimage, public Csound {
+class UI :public Csound,public Cbullet{
 public:
 	UI()
 	{

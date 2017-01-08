@@ -357,6 +357,7 @@ private:
 	int tank_y;
 	int face;   //Ì¹¿Ë³¯Ïò
 
+
 	void Left() //×ó×ß
 	{
 		if (x <= 0)

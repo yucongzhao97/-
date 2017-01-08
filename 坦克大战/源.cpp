@@ -31,6 +31,7 @@ public:
 		Gamebackground,//游戏内背景图
 		howto,//游戏说明
 		bullet[11],//11个子弹图
+		win,//获得胜利
 		back[2], replay[2];//返回，重新开始
 private:
 	void load() {
@@ -72,6 +73,7 @@ private:
 		loadimage(&bullet[8], "图片\\子弹8.jpg");
 		loadimage(&bullet[9], "图片\\子弹9.jpg");
 		loadimage(&bullet[10], "图片\\子弹10.jpg");
+		loadimage(&win, "图片\\胜利.jpg");
 	}
 };
 
@@ -390,15 +392,27 @@ public:
 		tank_x = x / 60;
 		tank_y = y / 60;
 		if (getItem(getLevel(), getTank_x(), getTank_y()) == -1) {
-			setx(0);
-			sety(0);
-			num = 10;
-			changeLevel();	
-			clearcliprgn();
-			putimage(0, 0, &tank[2]);
+			if (getLevel() == 2)
+			{
+				putimage(0, 0, &win);
+				Win = true;
+				mciSendString("stop 音乐\\游戏音乐.mp3", NULL, 0, NULL);
+			}
+			else
+			{
+				setx(0);
+				sety(0);
+				num = 10;
+				changeLevel();
+				clearcliprgn();
+				putimage(0, 0, &tank[2]);
+			}
 		}
-		InitMap();
- 		
+		if (Win != true)
+		{
+			InitMap();
+		}
+	
 	}
 	int getTank_x()
 	{
@@ -426,7 +440,7 @@ private:
 	int tank_x = x / 60;//坦克在矩阵中X位置
 	int tank_y = y / 60;//坦克在矩阵中Y位置
 	int face = 1;   //坦克朝向
-
+	bool Win = false;
 	//开火
 	void fire() {
 		if (num > 0)
@@ -520,7 +534,7 @@ public:
 	void start()
 	{
 		initgraph(width, height);
-		//mciSendString("play 音乐\\游戏音乐.mp3", NULL, 0, NULL);
+		mciSendString("play 音乐\\游戏音乐.mp3 repeat", NULL, 0, NULL);
 		Cmap level;
 		Cimage img;
 		level.InitMap();
@@ -566,7 +580,7 @@ public:
 	{
 		putimage(0, 0, &backImage);
 
-		//mciSendString("play 音乐\\主界面.mp3", NULL, 0, NULL);
+		mciSendString("play 音乐\\主界面.mp3", NULL, 0, NULL);
 		putimage(70, 170, &hbuttonImage[0]);
 		putimage(70, 290, &hbuttonImage[1]);
 		putimage(70, 410, &hbuttonImage[2]);
@@ -640,9 +654,8 @@ private:
 	}
 };
 
-int main()
+void main()
 {
 	UI ui;
 
-	system("pause");
 }

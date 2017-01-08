@@ -27,7 +27,9 @@ public:
 		end,    //结束标志
 		tank[4],    //坦克4个方向 0_up 1_right 2_down 3_left
 		Bullet[4],//子弹4个方向
-		Gamebackground;//游戏内背景图
+		Gamebackground,//游戏内背景图
+		howto,//游戏说明
+		back[2], replay[2];//返回，重新开始
 private:
 	void load() {
 		loadimage(&backGround, "图片\\地图背景.jpg");
@@ -38,6 +40,10 @@ private:
 		loadimage(&lbuttonImage[0], "图片\\开始游戏.jpg");
 		loadimage(&lbuttonImage[1], "图片\\游戏说明.jpg");
 		loadimage(&lbuttonImage[2], "图片\\退出游戏.jpg");
+		loadimage(&back[0], "图片\\返回上级1.jpg");
+		loadimage(&back[1], "图片\\返回上级.jpg");
+		loadimage(&replay[0], "图片\\重新开始1.jpg");
+		loadimage(&replay[1], "图片\\重新开始.jpg");
 		loadimage(&block[0], "图片\\砖块0.jpg");
 		loadimage(&block[1], "图片\\砖块0.5.jpg");
 		loadimage(&block[2], "图片\\砖块1.jpg");
@@ -52,6 +58,8 @@ private:
 		loadimage(&Bullet[3], "图片\\bullet_down.jpg");
 		loadimage(&Bullet[0], "图片\\bullet_left.jpg");
 		loadimage(&Gamebackground, "图片\\gamebackground.jpg");
+		loadimage(&howto, "图片\\游戏说明页1.jpg");
+
 	}
 };
 
@@ -188,15 +196,18 @@ public:
 			break;
 		}
 	}
+	int getBullet()
+	{
+		return num;
+	}
 private:
 	int num = 10;     //子弹数量10
-
 	int distance;  //子弹需要行走的距离
 	int Bx, By;    //子弹左上角坐标
 	int bullet_x;//子弹在矩阵中X坐标
 	int bullet_y;//子弹在矩阵中Y坐标
 
-				 //子弹向左飞行
+	 //子弹向左飞行
 	void left(int x, int y) {
 		distance = 0;
 		while (getItem(getLevel(), bullet_y, bullet_x - distance / 60) == 0 && Bx - distance >= 0) {
@@ -335,6 +346,7 @@ private:
 	}
 
 };
+
 
 class Ctank :public Cbullet {
 public:
@@ -541,6 +553,10 @@ public:
 			}
 		}
 	}
+	void gamescene()
+	{
+
+	}
 private:
 	int width = 800; //主界面宽800
 	int height = 600; //主界面高600
@@ -549,19 +565,20 @@ private:
 	void howtoplay()
 	{
 		clearcliprgn();
-		putimage(600, 500, &lbuttonImage[0]);
+		putimage(0, 0, &howto);
+		putimage(560, 500, &back[0]);
 		MOUSEMSG msg;
 		while (1)
 		{
 			msg = GetMouseMsg();
 			//开始游戏
-			if (msg.x >= 600 && msg.x <= 700 && msg.y >= 500 && msg.y <= 500 + bHeight && msg.uMsg == WM_LBUTTONDOWN)
+			if (msg.x >= 560 && msg.x <= 560 + bWidth && msg.y >= 500 && msg.y <= 500 + bHeight && msg.uMsg == WM_LBUTTONDOWN)
 			{
-				putimage(600, 500, &lbuttonImage[0]);
+				putimage(560, 500, &back[1]);
 			}
-			else if (msg.x >= 600 && msg.x <= 700 && msg.y >= 500 && msg.y <= 500 + bHeight && msg.uMsg == WM_LBUTTONUP)
+			else if (msg.x >= 560 && msg.x <= 560 + bWidth && msg.y >= 500 && msg.y <= 500 + bHeight && msg.uMsg == WM_LBUTTONUP)
 			{
-				putimage(600, 500, &hbuttonImage[0]);
+				putimage(560, 500, &back[0]);
 				mainscene();
 				break;
 			}

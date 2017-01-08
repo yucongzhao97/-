@@ -327,7 +327,7 @@ private:
 	}
 };
 
-
+//’‚ «≤‚ ‘
 
 class Ctank :public Cbullet {
 public:
